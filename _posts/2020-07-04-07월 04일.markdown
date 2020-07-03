@@ -1,9 +1,9 @@
 ---
 layout: post
 title:  "07월 04일"
-description: An example post which shows code rendering.
+description: 07월 04일 모각코 - 계획 완료 후 결과[2] 작성
 date:   2020-07-04 00:00:00 +0530
-categories: Javascript NodeJS
+categories: 모각코
 ---
 
 1. 계획 : JavaScript 개념 복습
