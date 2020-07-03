@@ -17,7 +17,7 @@ sass:
 permalink: /posts/:title/
 texture:
   title: 개발 공부 블로그
-  tagline: Kim Chunghwan.
+  tagline: Kim Chunghwan
   date_format: "%b %-d, %Y"
   style: black
   showNav: false
