@@ -1,0 +1,12 @@
+---
+layout: post
+title:  "07월 04일"
+description: An example post which shows code rendering.
+date:   2020-07-04 00:00:00 +0530
+categories: Javascript NodeJS
+---
+
+1. 계획 : JavaScript 개념 복습
+
+
+2. 결과(완료한 후 작성) : 
