@@ -1,0 +1,16 @@
+---
+layout: post
+title:  "팀원 블로그 주소"
+description: 팀원 블로그 주소
+date:   2020-07-02 12:00:00 +0530
+categories: 모각코
+---
+
+
+1) 김충환 : https://ch0213.tistory.com/
+
+2) 이지원 : https://thinkanddoit.github.io/
+
+3) 정현수 : https://junghyeonsu.github.io/
+
+4) 김서경 : https://JerryK026.github.io/

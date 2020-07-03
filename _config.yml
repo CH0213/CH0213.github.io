@@ -16,8 +16,8 @@ sass:
 
 permalink: /posts/:title/
 texture:
-  title: 개발 공부 블로그
-  tagline: Kim Chunghwan
+  title: 모각코 대표 블로그
+  tagline: 김충환
   date_format: "%b %-d, %Y"
   style: black
   showNav: false
