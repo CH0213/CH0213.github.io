@@ -33,4 +33,4 @@ categories: 모각코
 3) 사진 :
 
 
-<img src="../screen1.png">
+![screen1](https://user-images.githubusercontent.com/49121847/86495733-86694e80-bdb5-11ea-9098-5e863e4e0db6.png)
