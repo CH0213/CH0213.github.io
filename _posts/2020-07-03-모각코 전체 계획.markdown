@@ -1,0 +1,19 @@
+---
+layout: post
+title:  "모각코 전체 계획"
+description: An example post which shows code rendering.
+date:   2019-05-23 21:03:36 +0530
+categories: Javascript NodeJS
+---
+
+07/04 13:00 -JavaScript 복습
+
+07/11 13:00 -React 기본 개념
+
+07/18 13:00 -React Hook
+
+07/25 13:00 -기존 React파일을 Hook으로 전환
+
+08/01 13:00 -React-native
+
+08/08 13:00 -React-native로 간단한 app만들어보기
