@@ -1,20 +1,20 @@
 ---
 layout: post
-title:  "07월 04일"
-description: 07월 04일 모각코 - 계획 완료 후 결과[2] 작성
-date:   2020-07-04 12:00:00 +0530
+title:  "07월 06일"
+description: 07월 06일 모각코 - 계획 완료 후 결과[2] 작성
+date:   2020-07-06 12:00:00 +0530
 categories: 모각코
 ---
 
 1) 각 팀원별 계획 :
 
-- 김서경 :
+- 김서경 : K-해커톤 회의
 
-- 김충환 : 
+- 김충환 : K-해커톤 회의
 
-- 이지원 :
+- 이지원 : K-해커톤 회의
 
-- 정현수 :
+- 정현수 : K-해커톤 회의
 
 
 
@@ -31,4 +31,11 @@ categories: 모각코
 
 
 3) 사진 :
+
+![Uploading 캡처.PNG…]
+![KakaoTalk_20200706_193457996](https://user-images.githubusercontent.com/49121847/86585073-d6683100-bfc0-11ea-9fa8-cb5f42379018.jpg)
+![ㅇㅈㅇ](https://user-images.githubusercontent.com/49121847/86585075-d7995e00-bfc0-11ea-9158-3a7a14fc424f.jpg)
+![ㅈㅎㅅ](https://user-images.githubusercontent.com/49121847/86585077-d831f480-bfc0-11ea-8b06-a0a39ed4a2aa.jpg)
+![ㄱㅅㄱ](https://user-images.githubusercontent.com/49121847/86585078-d831f480-bfc0-11ea-88e1-46e04c5ecd3a.jpg)
+
 
