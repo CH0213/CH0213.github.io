@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "모각코 전체 계획"
-description: 모각코 전체 계획을 간략하게 설명
+title:  "07월 11일"
+description: 07월 06일 각자 목표 정하고 실행
 date:   2020-07-03 12:00:00 +0530
 categories: 모각코
 ---
@@ -17,11 +17,16 @@ categories: 모각코
 - 정현수 : react-native 니콜라스 아카데미 보고 간단한 날씨어플 만들기.
 
 
+2) 사진
 
-2) 결과(완료한 후 작성) : 
 
 ![캡처](https://user-images.githubusercontent.com/49121847/87217405-c2874b00-c383-11ea-8287-f9aad5e4072a.PNG)
 ![ㅇㅈㅇ](https://user-images.githubusercontent.com/49121847/87217408-c4510e80-c383-11ea-9eca-f0ef37ecf38a.jpg)
 ![ㅈㅎㅅ](https://user-images.githubusercontent.com/49121847/87217410-c4e9a500-c383-11ea-926c-27c2de999b4b.jpg)
 ![ㄱㅅㄱ](https://user-images.githubusercontent.com/49121847/87217413-c6b36880-c383-11ea-8ca5-791bc61f1734.jpg)
 ![ㄱㅊㅎ](https://user-images.githubusercontent.com/49121847/87217414-c74bff00-c383-11ea-9b8e-d455a10e96ee.jpg)
+
+
+
+3) 결과(완료한 후 작성) : 
+
