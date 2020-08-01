@@ -8,7 +8,7 @@ categories: 모각코
 
 1) 각 팀원별 계획 :
 
-- 김서경 : 계산이론 강의, 이산수학 + 계산이론 예제 풀기, 스위프트 강의
+- 김서경 : 계산이론
 
 - 김충환 : react 개념 공부
 
@@ -32,10 +32,10 @@ categories: 모각코
 
 \[완료\] - 각 블로그에서 확인 가능.
 
-- 김충환 : https://ch0213.tistory.com/
+- 김충환 : https://ch0213.tistory.com/7?category=0
 
-- 이지원 : https://thinkanddoit97.tistory.com/ (이지원 학생은 카메라가 고장나서 사용이 제한됩니다.)
+- 이지원 : https://thinkanddoit97.tistory.com/5?category=1137748
 
-- 정현수 : https://junghyeonsu.tistory.com/
+- 정현수 : https://junghyeonsu.tistory.com/13?category=795214
 
-- 김서경 : https://jerryk026.tistory.com/
+- 김서경 : https://jerryk026.tistory.com/20?category=911243
