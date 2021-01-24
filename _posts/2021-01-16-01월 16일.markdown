@@ -1,0 +1,65 @@
+---
+layout: post
+title:  "01월 16일"
+description: 01월 16일
+date:   2021-01-16 12:00:00 +0530
+categories: 모각코
+---
+
+0\. 사진
+![4](https://user-images.githubusercontent.com/49121847/105642359-9e78fa80-5ecc-11eb-8e0f-7549d04dac9c.jpg)
+
+
+1\. 목표
+
+\- gunicorn 사용해보기
+
+2\. 결과
+
+# Gunicorn
+
+## 구동 테스트
+
+gunicorn \--bind 0.0.0.0:8000 conf.wsgi:application
+
+파이썬 WSGI HTTP 서버 Gunicorn으로 구동하여 마찬가지로 http://서버\_아이피:8000/ 주소에 접속하여 내용이 잘 출력되는지 확인한다.
+
+Gunicorn 서버가 올바로 동작하면 가상환경에서 이제 빠져나온다.
+
+deatviate
+
+## 서비스 등록 스크립트 생성
+
+/etc/systemd/system/gunicorn.service파일을 아래와 같은 내용으로 생성한다.
+
+\[Unit\] Description\=gunicorn daemon After\=network.target \[Service\] User\=foo Group\=www-data WorkingDirectory\=/home/foo/django\_test/repo ExecStart\=/home/foo/django\_test/venv/bin/gunicorn \\ --workers 3 \\ --bind unix:/home/foo/django\_test/run/gunicorn.sock \\ conf.wsgi:application \[Install\] WantedBy\=multi-user.target
+
+## Gunicorn 서비스 등록
+
+sudo systemctl start gunicorn sudo systemctl enable gunicorn
+
+## Gunicorn 서비스 구동 확인
+
+systemctl status gunicorn
+
+만약 구동 실패시 에러 로그는/var/log/syslog에서 확인할 수 있다.
+
+# nginx
+
+## 사이트 설정 추가
+
+/etc/nginx/sites-available/django\_test파일을 아래와 같은 내용으로 생성한다.
+
+server { listen 80; server\_name 128.199.161.10; location = /favicon.ico { access\_log off; log\_not\_found off; } location /static/ { root /home/foo/django\_test/repo; } location / { include proxy\_params; proxy\_pass http://unix:/home/foo/django\_test/run/gunicorn.sock; } }
+
+## 사이트 추가
+
+sudo ln \-s /etc/nginx/sites-available/django\_test /etc/nginx/sites-enabled
+
+## nginx 설정 문법 검사 및 재기동
+
+sudo nginx -t sudo systemctl restart nginx
+
+## 방화벽 해제
+
+sudo ufw delete allow 8000 sudo ufw allow 'Nginx Full'

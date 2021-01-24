@@ -1,0 +1,78 @@
+---
+layout: post
+title:  "팀원 블로그 주소 + 12월 26일 목표 및 결과"
+description: 팀원 블로그 주소
+date:   2020-12-26 12:00:00 +0530
+categories: 모각코
+---
+
+▶ 팀원 블로그 주소
+
+1) 김충환 : https://ch0213.tistory.com/
+
+2) 이지원 : https://thinkanddoit97.tistory.com/ 
+
+3) 곽미래 : https://junghyeonsu.tistory.com/
+
+4) 이주희 : https://jerryk026.tistory.com/
+
+
+
+0\. 사진
+![1](https://user-images.githubusercontent.com/49121847/105642090-f1ea4900-5eca-11eb-9113-2e74c621e867.jpg)
+
+1\. 목표
+
+\- 2021 SiliconValley Online Internship 준비
+
+2\. 과정
+
+\- Docker 공부 : [www.youtube.com/watch?v=hWPv9LMlme8](https://www.youtube.com/watch?v=hWPv9LMlme8)
+
+## ⌨️ 실습용 프로젝트
+
+> gitlab에서 클론하기
+
+git clone [https://gitlab.com/yalco/practice-docker.git](https://gitlab.com/yalco/practice-docker.git)
+
+---
+
+## 📚 도커의 기본 명령어들
+
+❗️ 명령 입력 시**permission**관련 오류가 뜨는 환경에서는 각 명령어 앞에sudo를 붙여주세요.
+
+> ⭐️ 도커 버전 확인
+
+docker -v
+
+> 도커 이미지 다운만 받기
+
+docker pull {이미지명}:{태그}
+
+\# 예: docker pull python:3
+
+-   태그는 필수가 아닙니다.
+
+> ⭐️ 컴퓨터 내 도커 이미지들 보기
+
+docker images
+
+> 이미지로 컨테이너 생성하기
+
+docker create {옵션} {이미지명}:{태그}
+
+\# 예: docker create -it python
+
+> 만들어진 컨테이너 시작하기 (이미지에 CMD로 지정해놓은 작업 시키기)
+
+docker start {컨테이너 id 또는 이름}
+
+> 컨테이너로 들어가기 (컨테이너 내 CLI 이용하기)
+
+docker attach {컨테이너 id 또는 이름}
+
+> ⭐️ 이미지를 다운받아(없을 시에만) 바로 컨테이너 실행하여 진입하기
+
+docker run {이미지명}:{태그}
+
+\# 예: docker -it run python:3

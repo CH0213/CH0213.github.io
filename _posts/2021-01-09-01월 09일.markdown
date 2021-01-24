@@ -1,0 +1,138 @@
+---
+layout: post
+title:  "01월 09일"
+description: 01월 09일
+date:   2021-01-09 12:00:00 +0530
+categories: 모각코
+---
+
+0\. 사진
+![3](https://user-images.githubusercontent.com/49121847/105642275-290d2a00-5ecc-11eb-86f6-e5980310ee07.jpg)
+
+
+1\. 목표
+
+\- Django 사용법 익히기
+
+2\. 결과 
+
+# Rest Framework
+
+---
+
+이번장에서는 Django의 Rest Framework을 이용해 CRUD(Create, Retrieve, Update, Delete)를 할 수 있는 RESTful 서비스를 구현해 보겠습니다.
+
+Rest Framework을 사용하기 위해서는 pip 를 이용해서 해당 모듈을 먼저 설치해야 합니다.
+
+(본 강의는[http://www.django-rest-framework.org](http://www.django-rest-framework.org)의 튜토리얼을 기반으로 작성되었습니다. 좀 더 자세한 내용을 원하시면 해당 사이트의 API를 참조하시기 바랍니다.)
+
+### 가. Rest Framework 설치
+
+터미널(CMD) 창에서 아래 명령어를 입력합니다.
+
+-   pip install djangorestframework
+
+### 나. 프로젝트 생성 및 기본설정
+
+**1.프로젝트 및 앱 생성**터미널에서 pjt\_bbs 프로젝트를 생성하고 내부에 bbs 앱을 같이 생성해 주기 위해서 아래 명령어를 순서대로 입력합니다.
+
+-   django-admin startproject pjt\_bbs
+-   cd pjt\_bbs
+-   python manage.py startapp bbs
+
+[##_Image|kage@deigFo/btqUvEiwrYc/VgSNglxhFIeNRSVQIP9M51/img.png|alignCenter|data-origin-width="0" data-origin-height="0" data-ke-mobilestyle="widthContent"|||_##]
+
+**2.모델생성**models.py 파일을 열고 아래와 같이 모델을 정의합니다.
+
+-   프로젝트디렉토리/bbs/models.py
+
+from django.db import models class Bbs(models.Model): created = models.DateTimeField(auto\_now\_add=True) title = models.CharField(max\_length=100, blank=True, default='') author = models.CharField(max\_length=20, blank=True, default='') pw = models.CharField(max\_length=12, blank=True, default='') content = models.TextField() class Meta: ordering = ('created',)
+
+**3.앱등록**settings.py 에 생성한 앱을 등록합니다.
+
+-   프로젝트디렉토리/pjt\_bbs/settings.py
+
+INSTALLED\_APPS = \[ 'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages', 'django.contrib.staticfiles', 'rest\_framework', 'bbs', \]
+
+**4.admin에 모델등록**  
+admin 에 생성한 모델을 등록해줍니다.
+
+-   프로젝트디렉토리/bbs/admin.py
+
+from django.contrib import admin from bbs.model import Bbs class BbsAdmin(admin.ModelAdmin): list\_display=('title','author','created',) admin.site.register(Bbs, BbsAdmin)
+
+**5.url설정**  
+요청 url에 대한 설정을 합니다. 먼저 프로젝트 url 파일을 수정합니다.
+
+-   프로젝트디렉토리/pjt\_bbs/urls.py
+
+from django.conf.urls import url, include from django.contrib import admin urlpatterns = \[ url(r'^admin/', admin.site.urls), url(r'^bbs/', include('bbs.urls')), \]
+
+그리고 bbs 앱 디렉토리에 urls.py 파일을 생성하고 설정해줍니다.
+
+-   프로젝트디렉토리/bbs/urls.py
+
+from django.conf.urls import url from rest\_framework.urlpatterns import format\_suffix\_patterns from bbs import views urlpatterns = \[ url(r'^$', views.bbs\_list), url(r'^(?P<pk>\[0-9\]+)/$', views.bbs\_detail), \] urlpatterns = format\_suffix\_patterns(urlpatterns)
+
+**6.migration**  
+이제 설정한 파일들을 실제 적용하기 위해 migration 명령어를 실행해 줍니다.
+
+-   python manage.py makemigrations # bbs 하위 디렉토리에 마이그레이션 파일 생성
+-   python manage.py migrate # 정의한 Bbs 모델로 데이터베이스 테이블 생성
+
+### 다. 개발
+
+**1.Serializer 작성**  
+Serializer 는 데이터를 직렬화(마치 스트림데이터처럼 변경) 해줍니다. 이 직렬화를 통해서 메모리상에 있는 변수와 값의 세트를 json 데이터로 변환해서 사용할 수 있게 됩니다. serializers.py 파일을 생성하고 아래와 같이 입력해줍니다.
+
+-   프로젝트디렉토리/bbs/serializers.py
+
+from rest\_framework import serializers from bbs.models import Bbs class BbsSerializer(serializers.ModelSerializer): \# ModelSerializer 를 이용해서 아래와 같이 짧은 코드로 직렬화 필드를 정의할 수 있다 class Meta: model = Bbs fields = ('id','title','author','pw','content') \# 신규 Bbs instance를 생성해서 리턴해준다 def create(self, validated\_data): return Bbs.objects.create(\*\*validated\_data) \# 생성되어 있는 Bbs instance 를 저장한 후 리턴해준다 def update(self, instance, validated\_data): instance.title = validated\_data.get('title', instance.title) instance.author = validated\_data.get('author', instance.author) instance.pw = validated\_data.get('pw', instance.pw) instance.content = validated\_data.get('content', instance.content) instance.save() return instance
+
+**2.View 작성**  
+위에서 작성한 serializer를 이용해서 웹으로 부터 요청을 받을 View 파일을 작성합니다. url에서 bbs/ 로 끝나는 요청이 GET일경우 목록으로 처리하고, POST로 들어오면 입력으로 처리합니다. 그리고 bbs/ 다음에 숫자값이 입력되어 있을경우(예를들어 bbs/15)에 GET일 경우 한개의 데이터, PUT은 수정, DELETE 는 삭제처리를 해줍니다. views.py 파일을 열고 아래와 같이 작성해줍니다.
+
+-   프로젝트디렉토리/bbs/views.py
+
+from rest\_framework import status from rest\_framework.decorators import api\_view from rest\_framework.response import Response from bbs.models import Bbs from bbs.serializers import BbsSerializer \# 요청 url 인 bbs/ 에 대해서 urls.py 에 정의된 view.bbs\_list 가 호출된다. @api\_view(\['GET', 'POST'\]) def bbs\_list(request, format=None): if request.method == 'GET': bbs = Bbs.objects.all() serializer = BbsSerializer(bbs, many=True) \# many 값이 True 이면 다수의 데이터 instance를 직렬화할수 있다 return Response(serializer.data) elif request.method == 'POST': serializer = BbsSerializer(data=request.data) if serializer.is\_valid(): serializer.save() return Response(serializer.data, status=status.HTTP\_201\_CREATED) return Response(serializer.errors, status=status.HTTP\_400\_BAD\_REQUEST) \# 요청 url 인 bbs/번호 에 대해서 urls.py 에 정의된 view.bbs\_detail 이 호출된다 @api\_view(\['GET', 'PUT', 'DELETE'\]) def bbs\_detail(request, pk, format=None): try: bbs = Bbs.objects.get(pk=pk) except Bbs.DoesNotExist: return Response(status=status.HTTP\_404\_NOT\_FOUND) if request.method == 'GET': serializer = BbsSerializer(bbs) return Response(serializer.data) elif request.method == 'PUT': serializer = BbsSerializer(bbs, data=request.data) if serializer.is\_valid(): serializer.save() return Response(serializer.data) return Response(serializer.errors, status=status.HTTP\_400\_BAD\_REQUEST) elif request.method == 'DELETE': bbs.delete() return Response(status=status.HTTP\_204\_NO\_CONTENT)
+
+### 다. 개발내용 테스트
+
+**1.서버실행**  
+프로젝트 디렉토리에서 서버를 실행합니다.
+
+-   python manage.py runserver
+
+**2.포스트맨을 통한 데이터입력 요청**  
+우선 데이터 입력처리 확인을 위해 포스트맨을 열고 아래와 같이 입력합니다.
+
+주소 : http://127.0.0.1:8000/bbs/ Method : POST Headers : application/json Body (type=Raw) : { "title":"title test", "author":"michael", "pw":"qwer1234", "content":"i am here" }
+
+[##_Image|kage@br2beE/btqUzu0IXFu/ALj1CVJhQ69FPE1Z5kP6Bk/img.png|alignCenter|data-origin-width="0" data-origin-height="0" data-ke-mobilestyle="widthContent"|||_##]
+
+**3\. 브라우저에서 데이터 요청**  
+몇개 데이터를 더 입력한 후 브라우저를 통해 목록을 요청하면 아래와 같이 Django restframework 에서 지원하는 json 데이터 페이지가 출력됩니다. 웹 브라우저를 통해 요청하면 아래와 같이 완성된 형태의 페이지가 보여지게 되고, ajax 나 모바일 앱을 통해 요청을 하면 데이터만 받아서 사용할 수 있게 됩니다.
+
+-   [http://127.0.0.1:8000/bbs/](http://127.0.0.1:8000/bbs/)
+
+[##_Image|kage@kZoiC/btqUEAlLZCW/e1ZE48HwU7kqGbRAKEA3E0/img.png|alignCenter|data-origin-width="0" data-origin-height="0" data-ke-mobilestyle="widthContent"|||_##]
+
+### 라. 클래스 기반 뷰처리
+
+이번에는 코드를 조금 수정해서 기존 함수기반의 뷰 처리를 클래스 기반으로 변경해 보겠습니다. 클래스 기반으로 변경하는 이유는 rest framework 라이브러리 클래스에 CRUD에 대한 기본처리가 정의되어 있기 때문에 더 짧은 코드로 CRUD 를 완성할수 있기 때문입니다. 먼저 views.py 파일을 열고 아래와 같이 코드전체를 수정합니다.
+
+**1.views 수정**
+
+-   프로젝트디렉토리/bbs/views.py
+
+\# 클래스 기반의 Rest CRUD 처리 from bbs.models import Bbs from bbs.serializers import BbsSerializer from rest\_framework import generics \# generics 에 목록과 생성 API 가 정의되어 있다 class BbsList(generics.ListCreateAPIView): queryset = Bbs.objects.all() serializer\_class = BbsSerializer \# generics 에 상세, 수정, 삭제 API가 정의되어 있다 class BbsDetail(generics.RetrieveUpdateDestroyAPIView): queryset = Bbs.objects.all() serializer\_class = BbsSerializer
+
+**2.urls 수정**
+
+-   프로젝트디렉토리/bbs/urls.py
+
+from django.conf.urls import url from rest\_framework.urlpatterns import format\_suffix\_patterns from bbs import views urlpatterns = \[ \# 함수형 처리시 호출되는 함수 \# url(r'^$', views.bbs\_list), \# url(r'^(?P<pk>\[0-9\]+)/$', views.bbs\_detail), \# 클래스를 호출하고 해당클래스의 as\_view() 함수를 호출 url(r'^$', views.BbsList.as\_view()), url(r'^(?P<pk>\[0-9\]+)/$', views.BbsDetail.as\_view()), \] urlpatterns = format\_suffix\_patterns(urlpatterns)
+
+이제 브라우저에서 테스트 주소를 다시 입력해보면 이전과 동일하게 동작하는 것을 확인할 수 있습니다.
+
+이와 같이 Django의 Rest Framework을 사용할 경우 클래스기반으로 코드를 작성하게 되면 더 짧은 코드로 빠른 시간안에 완성도 높은 결과물을 만들 수 있게됩니다.

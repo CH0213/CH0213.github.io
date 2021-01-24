@@ -1,0 +1,53 @@
+---
+layout: post
+title:  "01월 02일"
+description: 01월 02일 모각코
+date:   2021-01-02 12:00:00 +0530
+categories: 모각코
+---
+
+0. 사진
+![2](https://user-images.githubusercontent.com/49121847/105642218-bd2ac180-5ecb-11eb-953d-34ac44411cf9.jpg)
+  
+  
+
+1. 목표
+
+\- React Hooks 기본 문법 공부
+
+  
+  
+
+2. 결과
+
+useStateHook을 사용하기 전에 기존에 우리가 state를 다루기 위해 어떻게 해주었는지 class로 만들어 봅시다.
+
+EX) Class로 state 다루기
+
+import React from "react"; class Example extends React.Component { constructor(props) { // 리액트의 컴포넌트와 연결하기 위해 super를 사용합니다. super(props); this.state = { count: 0 }; } render() { return ( <div\><p\>You clicked {this.state.count} times</p\> // 버튼을 누르면 count의 숫자가 올라가게 state를 교체한다. <buttononClick\={()\=\> this.setState({ count: this.state.count + 1 })}> Click me </button\></div\> ); } }
+
+위와같이 Class를 사용해도 state를 충분히 다룰 수 있습니다.. 그렇다면 Hook을 사용하면 어떻게 될까요?
+
+Ex) Hook으로 state 다루기
+
+import React, { useState } from 'react'; // ES6버전에서 사용하는 화살표 함수를 사용했습니다. const Example = () => { // 새로운 state 변수를 선언하고, count라 부르겠습니다. const \[count, setCount\] = useState(0); return ( <div\><p\>You clicked {count} times</p\><buttononClick\={()\=\> setCount(count + 1)}> Click me </button\></div\> ); }
+
+어때 보이나요? 아직 useState를 보면 뭔지 모르겠지만 Class보다 훨씬 코드가 간결해보입니다.
+
+이제 useState가 정확히 무엇인지 확인해봅시다.
+
+const \[count, setCount\] = useState(0);
+
+위 자바스크립트 문법은 “배열 구조 분해”라고 하고, count와 seCount, 총 2개의 값을 만들고 있습니다.
+
+즉, useState를 사용하면 count라는 첫 번째 값과 setCount라는 두 번째 값을 반환합니다. 아래의 코드와 같은 효과를 낼 수 있습니다.
+
+// 두 개의 아이템이 있는 쌍을 반환 const countStateVariable = useState('banana'); const count = countStateVariable\[0\]; // 첫 번째 아이템 const setCount = countStateVariable\[1\]; // 두 번째 아이템
+
+useState는 정확히 무엇을 반환할까요? state 변수, 해당 변수를 갱신할 수 있는 함수 이 두 가지 쌍을 반환합니다.
+
+count는 0의 값을 갖게 되고 setCount함수를 통해 우리는 count의 값을 갱신 시킬수 있습니다.
+
+우리는 여기까지 Hook을 사용해 state를 만들고 사용하는 방법을 알아보았습니다.
+
+다음에는 Hook으로 state의 라이프 사이클을 다루는 방법을 확인해보겠습니다.
