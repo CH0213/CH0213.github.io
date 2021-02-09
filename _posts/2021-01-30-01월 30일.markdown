@@ -1,0 +1,263 @@
+---
+layout: post
+title:  "01월 30일"
+description: 01월 30일
+date:   2021-01-30 12:00:00 +0530
+categories: 모각코
+---
+
+0\. 사진
+![KakaoTalk_20210123_154841916](https://user-images.githubusercontent.com/49121847/107376106-d7e87180-6b2c-11eb-850d-27e819a381a8.jpg)
+
+
+1\. 목표
+
+\- spring backend
+
+2\. 결과
+
+# 16 스프링 MVC로 REST API 사용하기
+
+데이터는 왕
+
+-   소프트웨어는 대체되어도 수년간 쌓인 데이터는 대체할 수 없다
+    
+-   SOAP 동작과 프로세싱에 집중
+    
+-   REST 관심은 데이터 처리
+
+스프링 3.0 부터 REST 작업에 대한 최고 수준의 지원을 제공 3.1, 3.2 4.0 에도 계속 됨
+
+## 16.1 휴식(REST)을 취하다 (Getting REST)
+
+-   SOAP - 많은 애플리케이션에게 부담
+-   REST - 더 간편한 대안 제공
+    
+-   많은 사람들이 REST가 무엇인지 확실하게 이해하지 못한다.
+    
+
+### 16.1.1 REST의 기본 개념
+
+-   REST - SOAP과 같이 또 다른 RPC(Remote Procedure Call) 메커니즘? 아니다
+    
+-   REST - 평범한 HTTP URL 을 통해 호출
+    
+-   SOAP - 수많은 XML 네임스페이스를 이용
+    
+-   RPC(Remote Procedure Call)와 거의 관련 없다.
+    
+-   RPC - 서비스 지향적, 액션과 동사에 초점
+    
+-   REST - 리소스 지향적이고 애플리케이션을 표현하는 객체와 명사를 강조
+    
+-   표현(Representational) - REST 리소스는 XML, JSON(JavaScript Object Notation), HTML 등 사실상 거의 모든 현식으로 표현
+    
+-   상태(State) - 리소스에 대해 액션보다 상태에 더 많은 관심
+-   전달(Transfer) - REST는 한 애플리케이션에서 다른 애플리케이션으로 어떤 표현 형식으로 리소스 데이터 전달을 포함한다.
+    
+-   URL에서 리소스 구별, 서버에 명령어를 보내지 않음
+    
+
+CRUD 매핑
+
+-   C 생성 - POST
+-   R 읽기 - GET
+-   U 업데이트 - PUT 또는 PATCH
+-   D 삭제 - DELETE
+
+-   실제로 확인 해 보면 DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT, TRACE 가 있다.
+
+### 16.1.2 스프링이 REST를 지원하는 방법
+
+-   이전부터 가능. 스프링 3부터 개선. 4.0 기준 설명
+-   컨트롤러 REST 네 가지 주요 메소드 - GET, PUT, DELETE, POST. PATCH 는 스프링 3.2 이상
+-   @PathVariable 파라미터화된 URL(경로의 일부분에 변수 입력이 있는 URL)에 대한 요청을 처리.@RequestMapping("/dog/{name}") public String dog(@PathVariable String name) {
+-   XML, JSON, Atom, RSS 등 다양한 방식으로 표현. 스프링의 뷰와 뷰 리졸버를 이용
+-   클라이언트에 대한 가장 적합한 표현은 새로운 ContentNegotiatingViewRsolver를 이용해 선택
+-   @ReponseBody 애너테이션, 다양한 HttpMessageConverter 로 뷰 기반 렌더링 무시
+-   마찬가지로 새로운 @RequestBody 애너테이션은 HttpMethodConverter 구현체와 함께 인바운드 HTTP 데이터를 컨트롤러의 핸들러 메소드에 전달하는 자바 객체로 변환
+-   RestTemplate은 클라이언트 측의 REST 리소스 사용을 간소화
+
+## 16.2 첫 번째 REST 엔드포인트 만들기
+
+-   RESTful 컨트롤러 생성
+    
+    @Controller public class DemoController { @ResponseBody @RequestMapping(value="/hello2", method= RequestMethod.GET) public HashMap<String, Object> test2() { HashMap<String, Object> map = new HashMap<>(); map.put("abc", "ddd"); return map; }
+-   @RestController 이용하기. @RestController 는 @Controller 와 @ResponseBody 포함. 스프링 4.0
+    
+    @RestController public class DemoController { @RequestMapping(value="/hello3", method= RequestMethod.GET) public HashMap<String, Object> test3() { HashMap<String, Object> map = new HashMap<>(); map.put("abcaa", "ddeeed"); return map; }
+-   최소한 json을 지원하기를 추천
+    
+-   실제로 Spring Boot 환경에서 별다른 설정 안하면 json 이 기본
+
+스프링은 리소스의 자바 표현을 클라이언트에 전달될 표현으로 변환하는 두 가지 방법을 제공
+
+-   콘텐츠 협상 (Content Negotiation) - 모델이 클라이언트에 제공되는 표현으로 렌더링될 수 있도록 뷰는 선택된다
+-   메시지 변환 (Message Converter) - 메시지 변환기는 컨트롤러에서 반환된 객체를 클라이언트에 제공되는 표현으로 변경
+
+### 16.2.1 리소스 표현 협상
+
+스프링의 ContentNegotiatingViewResolver는 클라이언트가 고려하려는 콘텐츠 타입을 선택하는 특별한 뷰 리졸버
+
+@Bean public ViewResolver cnViewResolver() { return new ContentNegotiatingViewResolver(); }
+
+ContentNegotiatingViewResolver 의 동작방식을 이해하려면 콘텐츠 협상의 두 단계를 알아야 한다.
+
+1.  요청 미디어 타입 결정
+2.  요청 미디어 타입에 대해 최적의 뷰 검색
+
+요청 미디어 타입 결정
+
+-   ContentNegotiatingViewResolver: URL 의 파일 확장자 > Accept 헤더 > 기본 콘텐츠 타입
+-   확장자 ex)[http://.../dog/123.json](http://.../dog/123.json)
+    
+    -   .json 이면 application/json
+    -   .xml 타입이면 application/xml
+    -   .html text/html
+-   단점: PathVariable 사용시 "." 들어간 인자 넣으면 "." 이후 인식 못하기도 한다.
+    
+-   장점: API 만들기 유용함
+    
+-   [http://1boon.kakao.com/p/popular](http://1boon.kakao.com/p/popular)\- 일반 웹 페이지
+    
+-   [http://1boon.kakao.com/p/popular.json](http://1boon.kakao.com/p/popular.json)\- json 데이터
+    
+    { status: { code: 200, name: "OK" }, data: \[ { docId: "5779da0ee787d000017b480f", title: "\[7월 1주\] 홍관조 군단 새 수호신을 소개합니다", path: "sportsvod/jukos20160701", imgUrl: "[http://i2.media.daumcdn.net/photo-media/201607/04/mediadaum/20160704130128709.jpeg](http://i2.media.daumcdn.net/photo-media/201607/04/mediadaum/20160704130128709.jpeg)", totalView: 152739 }, ...
+-   [http://1boon.kakao.com/p/popular.xml](http://1boon.kakao.com/p/popular.xml)\- xml 데이터
+    
+    <commonResult\> <status\>OK</status\> <data\> <linkedTreeMap\> <entry key\="docId"\>5779da0ee787d000017b480f</entry\> <entry key\="title"\>\[7월 1주\] 홍관조 군단 새 수호신을 소개합니다</entry\> <entry key\="path"\>sportsvod/jukos20160701</entry\> <entry key\="imgUrl"\> [http://i2.media.daumcdn.net/photo-media/201607/04/mediadaum/20160704130128709.jpeg](http://i2.media.daumcdn.net/photo-media/201607/04/mediadaum/20160704130128709.jpeg) </entry\> <entry key\="totalView"\>152739.0</entry\> </linkedTreeMap\>
+
+미디어 타입 선택 방식이 미치는 영향
+
+-   내용협상 (Content Negotiation)
+    
+    -   [http://httpd.apache.org/docs/current/ko/content-negotiation.html](http://httpd.apache.org/docs/current/ko/content-negotiation.html)
+    -   HTTP 규약
+    -   Accept-Language: kr
+    -   Accept: text/html; q=1.0, text...
+    -   Accept-Charset, Accept-Encoding...
+-   스프링 3.2에서 추가된 ContentNegotiationManager
+    
+    -   ContentNegotiatingViewResolver 의 setter 메소드는 대부분 삭제. ContentNegotiationManager 를 통해서 설정
+-   ContentNegotiationManager 설정
+    
+-   xml config
+    
+    <bean id\="contentNegotiationManager" class\="org.springframework.http.ContentNegotiationManagerFactoryBean" p:defaultContentType\="application/json"\>
+-   java config
+    
+    @Override public void configureContentNegotiation(ContentNegotiationConfigurer configurer) { configurer.defaultContentType(MediaType.APPLICTION\_JSON); }
+
+ContentNegotiatingViewResolver의 장점과 한계
+
+-   장점: 컨트롤러 코드를 변경하지 않고 스프링 MVC의 최상단에서 REST 리소스 표현을 제공
+-   단점: 클라이언트가 무엇을 예상하는지를 나타내지는 못한다.
+-   이러한 한계점 때문에 ContentNegotiatingViewResolver 사용을 더 선호하지는 않음.
+-   대신, 리소스 표현을 제공하기 위한 스프링의 메시지 변환기(message converter)를 사용하는 것에 더 의존
+
+### 16.2.2 HTTP 메시지 변환기 사용
+
+-   메시지 변환은 컨트롤러에 의해서 만들어지는 데이터를 클라이언트에 제공되는 표현으로변환시키기 위한 보다 직접적인 방법을 제공
+
+표 16.1
+
+-   AtomFeedHttpMessageConverter - Rome Feed 객체를 Atom 피드로 (또는 반대 방향으로) 변환 (미디어 타입은 application/atom-xml) Rome 라이브러리가 클래스패스에 존재하는 경우 등록
+-   BufferedImageHttpMessageConverter - BufferedImages를 이미지 바이너리 데이터로 (또는 반대 방향으로) 변환
+-   ByteArrayHttpMessageConverter - 바이트 배열 읽기/쓰기. 모든 미디어 타입(\*/\*)에서 읽고 application/octet-stream으로 쓴다.
+-   FormHttpMessageConverter - application/x-www-form-urlencoded의 콘텐츠를 MultiValueMap으로 읽는다. 또한 MultiValueMap을 application/x-www-form-urlencoded로 쓰고 MultiValueMap를 multipartform-data로 쓴다.
+-   Jaxb2RootElementHttpMessageConverter - JAXB2 애너테이션이 적용된 객체로부터 XML(text/xml 또는 applicatoin/xml)을 (또는 반대 방향으로) 읽고 쓴다. JAXB v2 라이브러리가 클래스패스에 존재하는 경우 등록된다.
+-   MappingJacksonHttpMessageConverter - 타입이 있는 객체 또는 타입이 없는 HashMap으로부터 JSON을 (또는 반대 방향으로) 읽고 쓴다. Jackson JSON 라이브러리가 클래스패스에 존재하는 경우 등록된다.
+-   MappingJackson2HttpMessageConverter - Jackson2JSON 라이브러리가 클래스패스에 존재하는 경우 등록된다.
+-   MarshallingHttpMessageConverter - 주입된 마샬러(marshaller)와 언마샬러(unmarshaller)를 이용해 XML을 읽고 쓴다. 지원된느 마샬러(언마샬러)는 Castor, JAXB2, JIBX, XMLBeans 그리고 XStream이 있다.
+-   ResourceHttpMessageConverter - org.springframework.core.io.Resource를 읽고 쓴다.
+-   RssChannelHttpMessageConverter - Rome Channel 객체로부터 RSS 피드를 (또는 반대 방향으로) 읽고 쓴다. Rome 라이브러리가 클래스패스에 존재하는 경우 등록된다.
+-   SourceHttpMessageConverter - javax.xml.transform.Source 객체로부터 XML을 (또는 그 반대 방향으로) 읽거나 쓴다.
+-   StringHttpMessageConverter - 모든 미디어 타입(\*/\*)을 String 으로 읽는다. text/plain에 대한 String을 쓴다.
+-   XmlAwareFormHttpMessageConverter - FormHttpMessageConverter를 상속받아 SourceHttpMessageConverter를 이용해 XML 기반의 부분에 대한 지원을 추가한다.
+    
+-   예를 들어, 클라이언트가 요청의 Accept 헤더를 통해 application/json을 받을 수 있음을 나타낸다고 가정하자. Jackson JSON 라이브러리가 애플리케이션의 클래스패스에 있다고 가정하면, 핸들러 메소드에서 반환된 객체는 클라이언트에 반환되는 JSON 표현으로의 변환을 위해 MappingJacksonHttpMessageConverter에 할당된다. 반면에 요청 헤더가 클라이언트는 text/xml을 선호한다고 나타내면, Jaxb2RootElementHttpMessageConverter가 클라이언트에 대한 XML 응답을 생성하는 작업을 수행한다.
+    
+-   표 16.1 에 있는 HTTP 메시지 변환기 중 세 개는 기본적으로 등록된다. 따라서 사용하기 위한 스프링 설정은 필요 없다. 다만 라이브러리는 추가해야 한다.
+    
+
+응답 보디 (Response Body) 에서 리소스 상태 반환
+
+앞서 설명 했던 @ResponseBody 를 사용하면 일반 모델/뷰 스킵하고 메시지 변환기 사용해서 리로스를 클라이언트에 보내게 된다.
+
+요청 보디 (Request Body) 에서 리소스 상태받기@RequestMapping(method=RequestMethod.POST, consumes="application/json") public @ResponseBody Spittle saveSpittle(@RequestBody Spittle spittle) { return spittleRepository.save(spittle); }
+
+consumes="application/json" @RequestBody Spittle spittle 부분이 중요
+
+메시지 변환을 위한 기본 컨트롤러
+
+스프링 4.0 은 @RestController 사용 가능. 이미 앞서 설명 했음. @ResponseBody 사용 할 필요 없다. @RestController 가 @Controller, @ResponseBody 를 포함하고 있다.
+
+## 16.3 더 많은 리소스 사용하기
+
+훌륭한 REST API는 클라이언트와 서버 간의 리소스 전송 이상을 제공한다.
+
+@RequestMapping(value="/{id}", method=RequestMethod.GET) public @ResponseBody Spittle spittleById(@PathVariable Long id) { return spittleRepository.findOne(id); }
+
+Http status code 지정 : @ResponseStatus 응답에 대한 메타데이터 : ResponseEntity
+
+ResponseEntity 사용하기
+
+ResponseEntity는 리소스 표현으로 반환되는 객체와 더불어 응답에 대한 메타데이터(헤더와 상태코드와 같은)를 가지는 객체임.
+
+예외처리
+
+에러 핸들러 메서드는 항상 Error를 반환하고, HTTP 상태코드는 404(Not Found)를 사용함을 알고 있어야 하며, 유사한 정리 프로세스를 spittleNotFound()에 적용함.
+
+@ExceptionHandler(SpittleNotFoundException.class) @ResponseStatus(HttpStatus.NOT\_FOUND) public @ResponseBody Error spittleNotFound(SpittleNotFoundException e) { long spittleId = e.getSpittleId(); return new Error(4, "Spittle \[" + spittleId + "\] not found"); } 응답 시의 헤더 설정하기
+
+HttpHeaders 인스턴스는 응답 헤더 값을 전달하기 위해 생성함.
+
+@RequestMapping(method=RequestMethod.POST, consumes="application/json") @ResponseStatus(HttpStatus.CREATED) public ResponseEntity<Spittle> saveSpittle(@RequestBody Spittle spittle, UriComponentsBuilder ucb) { Spittle saved = spittleRepository.save(spittle); HttpHeaders headers = new HttpHeaders(); URI locationUri = ucb.path("/spittles/") .path(String.valueOf(saved.getId())) .build() .toUri(); headers.setLocation(locationUri); ResponseEntity<Spittle> responseEntity = new ResponseEntity<Spittle>(saved, headers, HttpStatus.CREATED); return responseEntity; }
+
+## 16.4 REST 리소스 사용하기
+
+유용하지 않은 많은 코드가 리소스 사용에 보일러플레이트(boilerplate)가 많이 포함되어 있고, 이러한 포함은 공통 코드를 캡슐화하고 변화를 파라미터화함. 이 동작은 스프링의 RestTemplate이 수행하는 동작임.
+
+16.4.1 RestTemplate 동작 살펴보기
+
+RestTemplate은 11개의 고유 동작을 정의하고, 각각은 총 36개의 메소드에 오버로드된다.
+
+[##_Image|kage@DP5PP/btqWOhcZmrf/vbPdogRKzzyzHL8j2HinG1/img.png|alignCenter|data-origin-width="0" data-origin-height="0" data-ke-mobilestyle="widthContent"|||_##]
+
+16.4.2 리소스 GET 하기
+
+[##_Image|kage@IXxtz/btqWzt0HCy5/QLCb73QTWgP16RbtiHpkek/img.png|alignCenter|data-origin-width="0" data-origin-height="0" data-ke-mobilestyle="widthContent"|||_##]
+
+16.4.3 리소스 조회public Profile fetchFacebookProfile(String id) { RestTemplate rest = new RestTemplate(); return rest.getForObject("[http://graph.facebook.com/](http://graph.facebook.com/){spitter}", Profile.class, id); } 16.4.4 응답 메타데이터 추출
+
+ResponseEntity는 HTTP 상태 코드와 응답 헤더와 같은 응답에 대한 추가적인 정보도 전달함
+
+Date lastModified = new Date(response.getHeaders().getLastModified());
+
+[##_Image|kage@daEI9a/btqWxggsk8Y/GIarGv7qk3iRR5cucQCbJk/img.png|alignCenter|data-origin-width="0" data-origin-height="0" data-ke-mobilestyle="widthContent"|||_##]
+
+16.4.5 리소스 PUT하기public void updateSpittle(Spittle spittle) { RestTemplate rest = new RestTemplate(); rest.put("http://localhost:8080/spittr-api/spittles/{id}", spittle, spittle.getId()); }
+
+객체가 변환될 콘텐츠 타입은 put()에 전달되는 타입에 따라 달라짐.
+
+-   String : StringHttpmessageConverter, text/plain
+-   MultiMap: FormHttpMessageConverter, application/x-www-form-urlencoded
+-   MappingJacksonHttpMessageConverter, application/json
+
+16.4.6 리소스 DELETE하기public void updateSpittle(long id) { RestTemplate rest = new RestTemplate(); rest.delete("http://localhost:8080/spittr-api/spittles/{id}", id); } 16.4.7 리소스 데이터 POST하기16.4.8 POST 요청으로부터 객체 응답 수신하기public void updateSpittle(Spitter spitter) { RestTemplate rest = new RestTemplate(); return rest.postForObject("http://localhost:8080/spittr-api/spitters", spitter, Spitter.class); } 16.4.9 POST 요청 후 리소스 위치 수신하기public void updateSpittle(Spitter spitter) { RestTemplate rest = new RestTemplate(); return rest.postForLocation("http://localhost:8080/spittr-api/spitters", spitter).toString() } 16.4.10 리소스 교환
+
+exchange()는 getForEntity()나 getForObject()와 달리 전송할 요청에 헤더를 설정할 수 있게 해줌.
+
+MultiValueMap<String, String> headers = new LinkedMultiValueMap<>(); headers.add("Accept", "application/json"); HttpEntity<Object> requestEntity = new HttpEntity<Object>(headers); ResponseEntity<Spitter> response = rest.exchange("http://localhost:8080/spittr-api/spitters/{spitter}", HttpMethod.GET, requestEntity, Spitter.class, spitterId); Spitter spitter = response.getBody(); }
+
+## 책 예제 프로젝트
+
+[spitter-api-message-converters](https://github.com/bluepoet/spitter-api-message-converters)
+
+## Spock Documentation
+
+[spock documentation](http://spockframework.github.io/spock/docs/1.1-rc-1/index.html)
+
+## Spock Github
+
+[spock github](https://github.com/spockframework/spock)
